@@ -38,19 +38,17 @@ namespace DatingApp.API.Controllers
             // validate request
             userForRegisterDto.UserName = userForRegisterDto.UserName.ToLower();
 
-            if (await _repo.UserExists(userForRegisterDto.UserName))
-            {
+            if (await _repo.UserExists(userForRegisterDto.UserName)) {
                 return BadRequest("Username already exists");
             }
 
-            User userToCreate = new User
-            {
+            User userToCreate = new User {
                 UserName = userForRegisterDto.UserName
             };
 
             User createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
 
-            return StatusCode(201); // HTTPStatus Code 201 = CretaedAtRoute
+            return StatusCode(201); // HTTPStatus Success Code 201 = CreatedRoute
         }
 
         [HttpPost("login")]
