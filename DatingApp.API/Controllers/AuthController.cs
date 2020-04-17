@@ -56,15 +56,14 @@ namespace DatingApp.API.Controllers
         {
             var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
 
-            if (userFromRepo == null)
-            {
+            if (userFromRepo == null) {
                 return Unauthorized();
             }
 
-            // Cretae Login Token - JWT
+            // Create Login Token - JWT
             var claims = new[] {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString() ),
-                new Claim(ClaimTypes.Name, userFromRepo.UserName)
+                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString() ),  // DatabaseId
+                new Claim(ClaimTypes.Name, userFromRepo.UserName)                   // User Name
             };
 
             // Sign the Token
@@ -73,8 +72,7 @@ namespace DatingApp.API.Controllers
             var creds = new SigningCredentials(key,SecurityAlgorithms.HmacSha512Signature);
 
             // Create Token
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
+            var tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
                 SigningCredentials = creds
